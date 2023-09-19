@@ -1,0 +1,79 @@
+@font-face 
+{	
+	src: url('rocksalt.ttf');
+	font-family: 'rocksalt';
+}
+html{
+background-image: url(images/feuille_cahier.png);
+background-size:cover;
+font-weight: bold;
+	}
+body
+{
+	background: none;
+	font-family: rocksalt;
+}
+
+#titre
+{
+margin-top: 0;
+text-align: center;
+display: inline-block;
+border-bottom: solid 1px ;
+margin-left:20%;
+	
+}
+.boutton
+{
+margin-left: 39%;
+text-align: center;
+font-size: ;
+background:url(images/gomme.png);
+display: inline;
+width: auto;
+padding: 10px;
+color: white;
+border-radius: 18px;
+text-decoration: none;}
+.boutton:click
+{
+	color:#ccc;
+/*	box-shadow:2px 3px 3px 3px #ccc;*/
+}
+
+#mot
+{
+	
+	text-align: center;
+	font-size: 40px;
+	display: inline;
+}
+
+
+.police
+{	padding-left: 14%;
+	font-size: 18px;
+	color:#093FA0; 
+	
+}
+#pendu_img
+{
+	float: right;
+	width:25%;
+}
+.touche_clavier
+{
+	background-color: orange;
+	color: white;
+	display: inline;
+	width :25px; 
+	border-radius: 6px;
+	font-weight: bold;
+	object-position: 
+}
+#clavier
+{
+	flex-wrap: wrap;
+	width:45%;
+}
+@media screen 

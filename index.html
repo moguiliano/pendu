@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+		
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+        <base>
+        <meta charset="UTF-8"/>
+		 <link href="styles.css" rel="stylesheet">
+	<title> Pendu </title>
+	</head>
+        <script>
+			/*
+				Declaration
+				des	variables
+				globales
+			*/
+            var tableau =  ['ail','artichaut','asperge','aubergine','betterave','blette','carotte','choufleur','concombre','courgette','epinard','laitue','navet','oignon','petitpois','pommedeterre','radis'];
+            var mot = "";
+            var mot_barres = "";
+            var erreur = 0;
+			var listeErreurs='';
+			
+			/*
+				Definition des fonctions de traitement
+			*/		
+			// Choisir un mot de façon aleatoire dans la liste 
+			function nouv_mot() { 
+				/* On tire un nombre aleatoire compris
+				   entre 0 (compris) et le nombre de mots (nom compris)
+				   Par exemple, si le tableau comporte 10 elements
+				   le nombre sera compris entre0 (indice du premier element)
+				   et 9 (indice du denier element)
+				*/
+                var indice = Math.floor(Math.random() * tableau.length);
+				/*
+					On recupere le mot qui se trouve
+					a l'emplacement tire au hasard
+				*/
+                mot = tableau[indice];  
+                afficher();
+            }
+			
+			
+			// Affichage ecran initial 
+			function afficher(){
+                var span_mot = document.getElementById("mot");
+				var pendu_img = document.getElementById("pendu_img");
+				var nbre_tirets = mot.length; 
+                mot_barres = ""; 
+                for( var i=0 ; i<nbre_tirets ; i++){ 
+					mot_barres+="-"; 
+                }
+                span_mot.textContent = mot_barres;
+				pendu_img.src='images/pendu_0.png';
+            }
+			
+           
+			// Fonction appellee quand on tape sur une lettre du clavier
+            function saisie(lettre)
+            {	var pendu_img= document.getElementById('pendu_img');
+                var span_mot = document.getElementById("mot");
+            	var longueur_mot = mot.length;
+            	var mot_affiche_apres = "";
+                var lettreErreur = document.getElementById("lettreErreur");
+				var ok = false;
+				var lettreDejaTapee = false;
+
+                for(var i=0 ; i<longueur_mot ; i++) {
+                    if(lettre==mot[i]){
+                        mot_affiche_apres += mot[i];         
+						ok= true;    
+                	}
+                    else {
+                        mot_affiche_apres += mot_barres[i];
+					} 
+						
+				}
+			   
+				/* 
+					Si la lettre ne se trouve pas dans le mot
+					on verifie qu'elle n'a pas encore ete tapee
+					afin de ne pas compte plusieurs fois la
+					meme erreur
+				*/
+			 	listeErreurs=lettreErreur.textContent;
+				if(!ok) {
+					for (var i=0 ; i<lettreErreur.length ; i++) {
+						if( lettre == lettreErreur[i]) {
+							lettreDejaTapee=true;// pour ne pas compter plusiers fois la même erreur .
+						}
+					}
+				} 
+				
+				/*
+					La lettre ne se trouve pas dans le mot
+					mais a deja ete tapee, on ne comptera
+					donc pas plusieurs fois la meme erreur
+				*/				
+				if(lettreDejaTapee) {
+					alert("Vous avez déjà tapé la lettre " + lettre);
+				}
+
+				/*
+					La lettre ne se trouve pas dans le mot
+					et elle n'a jamais ete tapee
+					on comptabilise dont une erreur
+				*/
+				
+				if (!ok && !lettreDejaTapee && erreur<=8 ) 
+				{
+					erreur++ ; 
+                    alert("La lettre " + lettre + " n'est pas dans le mot! " + "Vous vous etes trompé " + erreur + " fois.");
+                    listeErreurs = " " + lettre + ";" ;
+					lettreErreur.textContent += listeErreurs;
+					pendu_img.src='images/pendu_'+erreur+'.png';
+					
+                	
+				}
+
+				mot_barres = mot_affiche_apres; // On modifie le mot affiche
+				span_mot.textContent = mot_barres;
+               
+                if (erreur == 8) {
+					alert("le mot etait " + mot +" Vous avez perdu! "); lettreErreur.textContent = 'Lettres deja utilisées :' + " " ;
+					initialiser(); 
+				}
+			
+                if (mot_affiche_apres == mot) { //alerte SI le joueur a trouvé le mot complet
+					alert("felicitation !");
+//					initialiser();
+				}
+			}
+          
+            function initialiser() {
+				erreur=0;
+				lettre_error ='';
+				lettreErreur.textContent = "";
+				nouv_mot();
+			}
+			
+
+			document.onkeydown = function(event) {	
+				if(event.keyCode>=65 && event.keyCode<=90) {
+					saisie(String.fromCharCode(event.keyCode).toLowerCase());            
+				}
+			}
+        </script>
+    
+   
+     <body onload="initialiser()" ; class='police'>
+		 <div class='container'>
+			 <div class='row'>
+			 	<div class="col-md-12">
+					<h1 id= "titre">jeu du pendu</h1>
+				 </div>
+				 <div class='col-md-6'>
+					 <p> un mot a été choisis pour vous , il faut choisir les bonnes lettres pour le trouver !<br> vous avez le droit a 8 erreurs ! bonne chance a vous !<br> </p>
+					 
+					 <div style="color: red">indice : légumes de saison !</div> 
+					 
+				 </div>
+			 </div>
+		 </div>
+        
+		
+        <img id='pendu_img' src='images/pendu_0.png'><br>
+		 
+		 <span id="mot">mot inconnu</span><br>
+       
+       
+        <div onclick="initialiser(),afficher()"><a href="#" class="boutton">Nouvelle partie</a></div>
+       
+         
+       <br><br>
+		
+		Lettres deja utilisé :<span id= "lettreErreur"> </span>
+		 <div id='clavier'> 
+			 <button class='touche_clavier' id='a'>a</button>
+			 <button class='touche_clavier' id='z'>z</button>
+			 <button class='touche_clavier' id='e'>e</button>
+			 <button class='touche_clavier' id='r'>r</button>
+			 <button class='touche_clavier' id='t'>t</button>
+			 <button class='touche_clavier' id='y'>y</button>
+			 <button class='touche_clavier' id='u'>u</button>
+			 <button class='touche_clavier' id='i'>i</button>
+			 <button class='touche_clavier' id='o'>o</button>
+			 <button class='touche_clavier' id='p'>p</button>
+			 <button class='touche_clavier' id='q'>q</button>
+			 <button class='touche_clavier' id='s'>s</button>
+			 <button class='touche_clavier' id='d'>d</button>
+			 <button class='touche_clavier' id='f'>f</button>
+			 <button class='touche_clavier' id='g'>g</button>
+			 <button class='touche_clavier' id='h'>h</button>
+			 <button class='touche_clavier' id='j'>j</button>
+			 <button class='touche_clavier' id='k'>k</button>
+			 <button class='touche_clavier' id='l'>l</button>
+			 <button class='touche_clavier' id='m'>m</button>
+			 <button class='touche_clavier' id='w'>w</button>
+			 <button class='touche_clavier' id='x'>x</button>
+			 <button class='touche_clavier' id='c'>c</button>
+			 <button class='touche_clavier' id='v'>v</button>
+			 <button class='touche_clavier' id='b'>b</button>
+			 <button class='touche_clavier' id='n'>n</button>
+		 </div>
+    </body>
+	//a faire prochianement :
+	desactiver les erreur a partir de 8 ereurs 
+	mettre en lien le clavier visuel avec clavier du pc 
+	mettre en responsive//
+</html>
